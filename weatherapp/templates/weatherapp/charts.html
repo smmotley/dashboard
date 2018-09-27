@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>FC-python wrapper-forecast</title>
+
+<!-- If you are using downloaded FusionCharts libraries, uncomment the below code   -->
+
+
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type = "text/css"/>
+   	<script type="text/javascript" src="{% static "js/fusioncharts.js" %}"></script>
+   	<script type="text/javascript" src="{% static "js/themes/fusioncharts.theme.fusion.js" %}"></script>
+
+
+<!--
+   <script type="text/javascript" src="//cdn.fusioncharts.com/fusioncharts/latest/fusioncharts.js"></script>
+   <script type="text/javascript" src="//cdn.fusioncharts.com/fusioncharts/latest/themes/fusioncharts.theme.fusion.js"></script>
+ -->
+
+</head>
+<body style="font-family:'Helvetica Neue', Arial; font-size: 16px;">
+<div class="container-fluid" style="min-height:95%; ">
+    <div class="col-sm-2">
+		   <!-- Great, til you resize. -->
+			<!--<div class="well bs-sidebar affix" id="sidebar" style="background-color:#fff">-->
+			<div class="well bs-sidebar" id="sidebar" style="background-color:#fbf9ff">
+			  <ul class="nav nav-stacked">
+				<li><a href='/'>Home</a></li>
+				<li><a href='/blog/'>Blog</a></li>
+                  <li><a href='/chart/'>Chart</a></li>
+			  </ul>
+			</div> <!--well bs-sidebar affix-->
+		  </div> <!--col-sm-2-->
+
+	<h3>{{ chartTitle|safe }}</h3>
+    <div class = "row">
+	    <div id="chart-1">{{ output|safe }}</div>
+	    <a href="/">Back</a>
+        <div id="chart-2">{{ output_2|safe }}</div>
+    </div>
+
+
+     <form action="fetching-data-from-forecast-database" method="post">  {% csrf_token %}
+        <select name="station_dropdown" id="station_dropdown" onchange="this.form.submit()">
+        <option>Stations:</option>
+        {% block content %}
+            {% for station in city_ids %}
+                <option value={{ station }}>{{ station }}</option>
+            {% endfor %}
+        </select>
+    </form>
+    <form action="fetching-data-from-forecast-database" method="post">  {% csrf_token %}
+        <select name="day_dropdown" id="day_dropdown" onchange="this.form.submit()">
+        <option>Forecast Day:</option>
+            {% with ''|center:15 as range %}
+            {% for _ in range %}
+                <option value={{ forloop.counter }}>{{ forloop.counter }}</option>
+            {% endfor %}
+            {% endwith %}
+        {% endblock %}
+        </select>
+    </form>
+</div>
+</body>
+</html>
+
+
